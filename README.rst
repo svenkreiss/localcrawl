@@ -9,12 +9,70 @@ You will need PhantomJS:
 
     brew install PhantomJS
 
-Example:
+Example Run Command
+-------------------
 
 .. code-block:: sh
 
     localcrawl --start _build/html/index.html --out _crawled/ --depth 3
 
+
+Mustache Example
+----------------
+
+This can be used to convert templated files to HTML files (e.g. for validation
+with `html5validator <https://github.com/svenkreiss/html5validator>`_).
+
+Input:
+
+.. code-block:: html
+
+    <html>
+    <head>
+      <title>Mustache Test</title>
+    </head>
+    <body>
+      <div id="output"></div>
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
+      <script>
+        var data = {
+          item: 'Fork',
+          price: function() { return (1.10 * 1.08).toFixed(2); },
+        };
+        var html = Mustache.render('{{item}}: <b>${{price}}</b>', data);
+        document.getElementById('output').innerHTML = html;
+      </script>
+    </body>
+    </html>
+
+The crawled output includes the output from processing the template
+(``Fork: <b>$1.19</b>``):
+
+.. code-block:: html
+
+    <html><head>
+      <title>Mustache Test</title>
+    </head>
+    <body>
+      <div id="output">Fork: <b>$1.19</b></div>
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
+      <script>
+        var data = {
+          item: 'Fork',
+          price: function() { return (1.10 * 1.08).toFixed(2); },
+        };
+        var html = Mustache.render('{{item}}: <b>${{price}}</b>', data);
+        document.getElementById('output').innerHTML = html;
+      </script>
+
+
+    </body></html>
+
+
+Should play nice with:
+----------------------
 
 JavaScript template engines / JS frameworks:
 
