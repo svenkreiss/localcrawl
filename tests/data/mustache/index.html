@@ -1,15 +1,18 @@
 <html>
-<head><title>Mustache Test</title></head>
+<head>
+  <title>Mustache Test</title>
+</head>
 <body>
-<div id="output"></div>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
-<script>
-var data = {
-    item: 'Fork',
-    price: function() { return (1.10 * 1.08).toFixed(2); },
-};
-var html = Mustache.render('{{item}}: <b>${{price}}</b>', data);
-document.getElementById('output').innerHTML = html;
-</script>
+  <div id="output"></div>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.1/mustache.min.js"></script>
+  <script>
+    var data = {
+      item: 'Fork',
+      price: function() { return (1.10 * 1.08).toFixed(2); },
+    };
+    var html = Mustache.render('{{item}}: <b>${{price}}</b>', data);
+    document.getElementById('output').innerHTML = html;
+  </script>
 </body>
 </html>
