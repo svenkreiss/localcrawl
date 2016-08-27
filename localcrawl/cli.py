@@ -1,6 +1,8 @@
 """Crawl rendered JavaScript templates from a local server."""
 
+from .crawler import Crawler
 import argparse
+import logging
 
 
 def main():
@@ -9,5 +11,9 @@ def main():
                         help='start url or file')
     parser.add_argument('-o', '--out', default='_crawled/',
                         help='output directory')
+    parser.add_argument('--depth', default=3, type=int,
+                        help='depth of the crawl')
     args = parser.parse_args()
 
+    logging.basicConfig(level=logging.WARNING)
+    Crawler(args.start, args.out, max_depth=args.depth).crawl()

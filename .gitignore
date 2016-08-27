@@ -1,4 +1,6 @@
 venv*/
+tests/temp_data
+_crawled/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
