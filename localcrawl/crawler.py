@@ -3,22 +3,30 @@ import logging
 import os
 import string
 
-FILENAME_CHARS = '-_.() %s%s' % (string.ascii_letters, string.digits)
+FILEPATH_CHARS = '/-_.() %s%s' % (string.ascii_letters, string.digits)
 log = logging.getLogger(__name__)
 
 
 class Crawler(object):
-    def __init__(self, start, out='_crawled/', max_depth=3, scraper=None):
+    def __init__(self, start, out='_crawled/', max_depth=3,
+                 force_prefix=None, scraper=None):
+        start = self.absolute_path(start)
         self.urls = [(start, 0)]
         self.done = set()
         self.out = out
         self.max_depth = max_depth
+        self.force_prefix = force_prefix or self.guess_prefix(start)
         self.scraper = scraper or Scraper()
 
-        if not os.path.isdir(self.out):
-            os.makedirs(self.out)
-        else:
-            log.warn('Output directory already exists. Continuing.')
+    def absolute_path(self, path):
+        if '://' in path:
+            return path
+        if os.path.isfile(path):
+            return 'file://{}'.format(os.path.abspath(path))
+
+    def guess_prefix(self, path):
+        base, sep, _ = path.rpartition('/')
+        return base + sep
 
     def crawl(self):
         count = 0
@@ -26,12 +34,27 @@ class Crawler(object):
             url, depth = self.urls.pop(0)
             if url in self.done:
                 continue
+            if not url.startswith(self.force_prefix):
+                continue
 
             log.debug('Crawl url: {}'.format(url))
             html = self.scraper.html(url)
+            if not html:
+                log.warn('Invalid {}. Skipping.'.format(url))
+                continue
 
-            filename = ''.join(c for c in url if c in FILENAME_CHARS)
-            path = os.path.join(self.out, filename)
+            filename = ''.join(c
+                               for c in url[len(self.force_prefix):]
+                               if c in FILEPATH_CHARS)
+            path = os.path.abspath(os.path.join(self.out, filename))
+            if not path.startswith(os.path.abspath(self.out)):
+                log.warn('Path {} is outside of {}. Skipping.'
+                         ''.format(path, self.out))
+                continue
+            log.debug('Writing file: {}'.format(path))
+            dirname = os.path.dirname(path)
+            if not os.path.isdir(dirname):
+                os.makedirs(dirname)
             with open(path, 'w') as f:
                 f.write(html)
             self.done.add(url)

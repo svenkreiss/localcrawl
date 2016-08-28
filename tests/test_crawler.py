@@ -33,3 +33,18 @@ class CrawlerTest(unittest.TestCase):
 
         contents = self.all_contents(o)
         self.assertIn('Fork: <b>$1.19</b>', contents)
+
+    def test_links(self):
+        o = 'tests/temp_data/links'
+        c = localcrawl.Crawler('tests/data/links/index.html', o).crawl()
+        self.assertEqual(1, c)
+
+    def test_loop(self):
+        o = 'tests/temp_data/loop'
+        c = localcrawl.Crawler('tests/data/loop/index.html', o).crawl()
+        self.assertEqual(2, c)
+
+    def test_nested(self):
+        o = 'tests/temp_data/nested'
+        c = localcrawl.Crawler('tests/data/nested/index.html', o).crawl()
+        self.assertEqual(2, c)

@@ -1,9 +1,10 @@
 localcrawl
 ==========
 
-Crawl rendered JavaScript templates from a local server.
+.. image:: https://travis-ci.org/svenkreiss/localcrawl.svg?branch=master
+    :target: https://travis-ci.org/svenkreiss/localcrawl
 
-You will need PhantomJS:
+You will need PhantomJS. On a Mac:
 
 .. code-block:: sh
 
