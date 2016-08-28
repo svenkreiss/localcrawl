@@ -4,7 +4,10 @@ localcrawl
 .. image:: https://travis-ci.org/svenkreiss/localcrawl.svg?branch=master
     :target: https://travis-ci.org/svenkreiss/localcrawl
 
+Run ``localcrawl --help``:
+
 .. image:: https://raw.githubusercontent.com/svenkreiss/localcrawl/master/docs/help.png
+    :width: 450
 
 You will need PhantomJS. On a Mac:
 
