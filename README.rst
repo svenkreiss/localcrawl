@@ -4,6 +4,8 @@ localcrawl
 .. image:: https://travis-ci.org/svenkreiss/localcrawl.svg?branch=master
     :target: https://travis-ci.org/svenkreiss/localcrawl
 
+.. image:: https://raw.githubusercontent.com/svenkreiss/localcrawl/master/docs/help.png
+
 You will need PhantomJS. On a Mac:
 
 .. code-block:: sh
