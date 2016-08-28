@@ -27,13 +27,25 @@ class Crawler(object):
         return path
 
     def guess_prefix(self, path):
+        if path.startswith('http'):
+            path = self.complete_url(path)
         base, sep, _ = path.rpartition('/')
         return base + sep
+
+    def complete_url(self, url):
+        if url.endswith('/'):
+            return url + 'index.html'
+        if url[-1] in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
+            return url + '/index.html'
+        if '.' not in url.rpartition('/')[2]:
+            return url + '/index.html'
+        return url
 
     def crawl(self):
         count = 0
         while self.urls:
             url, depth = self.urls.pop(0)
+            url = self.complete_url(url)
             if url in self.done:
                 continue
             if not url.startswith(self.force_prefix):

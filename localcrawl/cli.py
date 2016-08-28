@@ -1,4 +1,4 @@
-"""Crawl rendered JavaScript templates from a local server."""
+"""Crawl and render JavaScript templates."""
 
 from .crawler import Crawler
 import argparse
