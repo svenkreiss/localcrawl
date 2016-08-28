@@ -10,6 +10,9 @@ You will need PhantomJS. On a Mac:
 
     brew install PhantomJS
 
+PhantomJS is pre-installed on TravisCI.
+
+
 Example Run Command
 -------------------
 
