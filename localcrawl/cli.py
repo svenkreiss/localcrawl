@@ -7,7 +7,7 @@ import logging
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--start', default='_build/html/index.html',
+    parser.add_argument('--start', default='_build/index.html',
                         help='start url or file')
     parser.add_argument('-o', '--out', default='_crawled/',
                         help='output directory')

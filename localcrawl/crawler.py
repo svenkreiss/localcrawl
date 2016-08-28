@@ -1,4 +1,5 @@
 from .scraper import Scraper
+import io
 import logging
 import os
 import string
@@ -23,6 +24,7 @@ class Crawler(object):
             return path
         if os.path.isfile(path):
             return 'file://{}'.format(os.path.abspath(path))
+        return path
 
     def guess_prefix(self, path):
         base, sep, _ = path.rpartition('/')
@@ -55,7 +57,7 @@ class Crawler(object):
             dirname = os.path.dirname(path)
             if not os.path.isdir(dirname):
                 os.makedirs(dirname)
-            with open(path, 'w') as f:
+            with io.open(path, 'w') as f:
                 f.write(html)
             self.done.add(url)
             count += 1
