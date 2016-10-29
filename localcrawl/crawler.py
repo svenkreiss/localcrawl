@@ -10,14 +10,16 @@ log = logging.getLogger(__name__)
 
 class Crawler(object):
     def __init__(self, start, out='_crawled/', max_depth=3,
-                 force_prefix=None, scraper=None):
+                 force_prefix=None, get_pdf=False, scraper=None):
         start = self.absolute_path(start)
         self.urls = [(start, 0)]
-        self.done = set()
         self.out = out
         self.max_depth = max_depth
         self.force_prefix = force_prefix or self.guess_prefix(start)
+        self.get_pdf = get_pdf
         self.scraper = scraper or Scraper()
+
+        self.done = set()
 
     def absolute_path(self, path):
         if '://' in path:
@@ -71,6 +73,8 @@ class Crawler(object):
                 os.makedirs(dirname)
             with io.open(path, 'w') as f:
                 f.write(html)
+            if self.get_pdf:
+                self.scraper.pdf(url, path.replace('.html', '') + '.pdf')
             self.done.add(url)
             count += 1
 
