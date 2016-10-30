@@ -4,4 +4,4 @@
 from .crawler import Crawler
 from .scraper import Scraper
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
