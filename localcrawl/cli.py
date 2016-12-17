@@ -17,8 +17,10 @@ def main():
                         help='depth of the crawl')
     parser.add_argument('--pdf', default=False, action='store_true',
                         help='also store a PDF version')
+    parser.add_argument('--run', default=None, nargs=argparse.REMAINDER,
+                        help='run a process')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
     Crawler(args.start, args.out,
-            max_depth=args.depth, get_pdf=args.pdf).crawl()
+            max_depth=args.depth, run=args.run, get_pdf=args.pdf).crawl()
