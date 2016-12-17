@@ -3,6 +3,8 @@ import io
 import logging
 import os
 import string
+import subprocess
+import time
 
 FILEPATH_CHARS = '/-_.() %s%s' % (string.ascii_letters, string.digits)
 log = logging.getLogger(__name__)
@@ -10,12 +12,13 @@ log = logging.getLogger(__name__)
 
 class Crawler(object):
     def __init__(self, start, out='_crawled/', max_depth=3,
-                 force_prefix=None, get_pdf=False, scraper=None):
+                 force_prefix=None, run=None, get_pdf=False, scraper=None):
         start = self.absolute_path(start)
         self.urls = [(start, 0)]
         self.out = out
         self.max_depth = max_depth
         self.force_prefix = force_prefix or self.guess_prefix(start)
+        self.run = run
         self.get_pdf = get_pdf
         self.scraper = scraper or Scraper()
 
@@ -45,6 +48,11 @@ class Crawler(object):
 
     def crawl(self):
         count = 0
+        process = None
+        if self.run:
+            process = subprocess.Popen(self.run)
+            time.sleep(3.0)
+
         while self.urls:
             url, depth = self.urls.pop(0)
             url = self.complete_url(url)
@@ -83,5 +91,8 @@ class Crawler(object):
 
             self.urls += [(lurl, depth + 1)
                           for lurl in self.scraper.link_urls(url)]
+
+        if process is not None:
+            process.terminate()
 
         return count
