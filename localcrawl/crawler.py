@@ -6,7 +6,7 @@ import string
 import subprocess
 import time
 
-FILEPATH_CHARS = '/-_.() %s%s' % (string.ascii_letters, string.digits)
+FILEPATH_CHARS = '/-_.() {}{}'.format(string.ascii_letters, string.digits)
 log = logging.getLogger(__name__)
 
 
