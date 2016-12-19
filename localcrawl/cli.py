@@ -19,8 +19,11 @@ def main():
                         help='also store a PDF version')
     parser.add_argument('--run', default=None, nargs=argparse.REMAINDER,
                         help='run a process')
+    parser.add_argument('--run-delay', default=3.0, type=float,
+                        help='wait after run process')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
-    Crawler(args.start, args.out,
-            max_depth=args.depth, run=args.run, get_pdf=args.pdf).crawl()
+    Crawler(args.start, args.out, max_depth=args.depth,
+            run=args.run, run_delay=args.run_delay,
+            get_pdf=args.pdf).crawl()

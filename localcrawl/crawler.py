@@ -6,19 +6,21 @@ import string
 import subprocess
 import time
 
-FILEPATH_CHARS = '/-_.() {}{}'.format(string.ascii_letters, string.digits)
+FILEPATH_CHARS = '/-_.()# {}{}'.format(string.ascii_letters, string.digits)
 log = logging.getLogger(__name__)
 
 
 class Crawler(object):
     def __init__(self, start, out='_crawled/', max_depth=3,
-                 force_prefix=None, run=None, get_pdf=False, scraper=None):
+                 force_prefix=None, run=None, run_delay=3.0,
+                 get_pdf=False, scraper=None):
         start = self.absolute_path(start)
         self.urls = [(start, 0)]
         self.out = out
         self.max_depth = max_depth
         self.force_prefix = force_prefix or self.guess_prefix(start)
         self.run = run
+        self.run_delay = run_delay
         self.get_pdf = get_pdf
         self.scraper = scraper or Scraper()
 
@@ -51,14 +53,17 @@ class Crawler(object):
         process = None
         if self.run:
             process = subprocess.Popen(self.run)
-            time.sleep(3.0)
+            time.sleep(self.run_delay)
 
         while self.urls:
             url, depth = self.urls.pop(0)
+            log.debug('============== {} ({}) ============'.format(url, depth))
             url = self.complete_url(url)
             if url in self.done:
+                log.debug('{} already crawled.'.format(url))
                 continue
             if not url.startswith(self.force_prefix):
+                log.warn('{} outside of {}.'.format(url, self.force_prefix))
                 continue
 
             log.debug('Crawl url: {}'.format(url))
