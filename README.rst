@@ -1,6 +1,11 @@
 localcrawl
 ==========
 
+    Command line tool that crawls a local webserver with a headless browser
+    and outputs static html files. Works well with
+    `html5validator <https://github.com/svenkreiss/html5validator>`_
+    to validate HTML5 from dynamic content with Javascript.
+
 .. image:: https://travis-ci.org/svenkreiss/localcrawl.svg?branch=master
     :target: https://travis-ci.org/svenkreiss/localcrawl
 

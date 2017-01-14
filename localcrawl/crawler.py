@@ -1,4 +1,5 @@
 from .scraper import Scraper
+import hashlib
 import io
 import logging
 import os
@@ -12,17 +13,18 @@ log = logging.getLogger(__name__)
 
 class Crawler(object):
     def __init__(self, start, out='_crawled/', max_depth=3,
-                 force_prefix=None, run=None, run_delay=3.0,
-                 get_pdf=False, scraper=None):
+                 force_url_prefix=None, run=None, run_delay=3.0,
+                 get_pdf=False, scraper=None, flat_output=False):
         start = self.absolute_path(start)
         self.urls = [(start, 0)]
         self.out = out
         self.max_depth = max_depth
-        self.force_prefix = force_prefix or self.guess_prefix(start)
+        self.force_url_prefix = force_url_prefix or self.guess_prefix(start)
         self.run = run
         self.run_delay = run_delay
         self.get_pdf = get_pdf
         self.scraper = scraper or Scraper()
+        self.flat_output = flat_output
 
         self.done = set()
 
@@ -58,46 +60,57 @@ class Crawler(object):
         while self.urls:
             url, depth = self.urls.pop(0)
             log.debug('============== {} ({}) ============'.format(url, depth))
-            url = self.complete_url(url)
-            if url in self.done:
-                log.debug('{} already crawled.'.format(url))
+
+            complete_url = self.complete_url(url)
+            if complete_url in self.done:
+                log.debug('{} already crawled.'.format(complete_url))
                 continue
-            if not url.startswith(self.force_prefix):
-                log.warn('{} outside of {}.'.format(url, self.force_prefix))
+            if not complete_url.startswith(self.force_url_prefix):
+                log.warn('{} outside of {}.'.format(complete_url,
+                                                    self.force_url_prefix))
                 continue
 
-            log.debug('Crawl url: {}'.format(url))
-            html = self.scraper.html(url)
-            if not html:
-                log.warn('Invalid {}. Skipping.'.format(url))
+            crawled = self.crawl_page(complete_url)
+            if crawled is None:
                 continue
 
-            filename = ''.join(c
-                               for c in url[len(self.force_prefix):]
-                               if c in FILEPATH_CHARS)
-            path = os.path.abspath(os.path.join(self.out, filename))
-            if not path.startswith(os.path.abspath(self.out)):
-                log.warn('Path {} is outside of {}. Skipping.'
-                         ''.format(path, self.out))
-                continue
-            log.debug('Writing file: {}'.format(path))
-            dirname = os.path.dirname(path)
-            if not os.path.isdir(dirname):
-                os.makedirs(dirname)
-            with io.open(path, 'w') as f:
-                f.write(html)
-            if self.get_pdf:
-                self.scraper.pdf(url, path.replace('.html', '') + '.pdf')
-            self.done.add(url)
+            if depth < self.max_depth:
+                self.urls += [(lurl, depth + 1) for lurl in crawled]
+
             count += 1
-
-            if depth >= self.max_depth:
-                continue
-
-            self.urls += [(lurl, depth + 1)
-                          for lurl in self.scraper.link_urls(url)]
 
         if process is not None:
             process.terminate()
 
         return count
+
+    def crawl_page(self, url):
+        log.debug('Crawl url: {}'.format(url))
+        html = self.scraper.html(url)
+        if not html:
+            log.warn('Invalid {}. Skipping.'.format(url))
+            return None
+
+        filename = ''.join(c
+                           for c in url[len(self.force_url_prefix):]
+                           if c in FILEPATH_CHARS)
+        if self.flat_output:
+            md5 = hashlib.md5(html.encode()).hexdigest()
+            filename = '{}.html'.format(md5)
+
+        path = os.path.abspath(os.path.join(self.out, filename))
+        if not path.startswith(os.path.abspath(self.out)):
+            log.warn('Path {} is outside of {}. Skipping.'
+                     ''.format(path, self.out))
+            return None
+        log.debug('Writing file: {}'.format(path))
+        dirname = os.path.dirname(path)
+        if not os.path.isdir(dirname):
+            os.makedirs(dirname)
+        with io.open(path, 'w') as f:
+            f.write(html)
+        if self.get_pdf:
+            self.scraper.pdf(url, path.replace('.html', '') + '.pdf')
+        self.done.add(url)
+
+        return self.scraper.link_urls(url)
