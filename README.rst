@@ -14,17 +14,11 @@ Run ``localcrawl --help``:
 .. image:: https://raw.githubusercontent.com/svenkreiss/localcrawl/master/docs/help.png
     :width: 450
 
-You will need PhantomJS. On a Mac:
-
-.. code-block:: sh
-
-    brew install PhantomJS
-
-PhantomJS is pre-installed on TravisCI.
+PhantomJS is required. It is pre-installed on TravisCI. On a Mac run ``brew install PhantomJS``.
 
 
-Example Run Command
--------------------
+Example Command
+---------------
 
 .. code-block:: sh
 
