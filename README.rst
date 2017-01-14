@@ -1,6 +1,11 @@
 localcrawl
 ==========
 
+    Command line tool that crawls a local webserver with a headless browser
+    and outputs static html files. Works well with
+    `html5validator <https://github.com/svenkreiss/html5validator>`_
+    to validate HTML5 from dynamic content with Javascript.
+
 .. image:: https://travis-ci.org/svenkreiss/localcrawl.svg?branch=master
     :target: https://travis-ci.org/svenkreiss/localcrawl
 
@@ -9,17 +14,11 @@ Run ``localcrawl --help``:
 .. image:: https://raw.githubusercontent.com/svenkreiss/localcrawl/master/docs/help.png
     :width: 450
 
-You will need PhantomJS. On a Mac:
-
-.. code-block:: sh
-
-    brew install PhantomJS
-
-PhantomJS is pre-installed on TravisCI.
+PhantomJS is required. It is pre-installed on TravisCI. On a Mac run ``brew install PhantomJS``.
 
 
-Example Run Command
--------------------
+Example Command
+---------------
 
 .. code-block:: sh
 

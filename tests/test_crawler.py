@@ -53,3 +53,9 @@ class CrawlerTest(unittest.TestCase):
         o = 'tests/temp_data/nested'
         c = localcrawl.Crawler('tests/data/nested/index.html', o).crawl()
         self.assertEqual(2, c)
+
+    def test_flat_output(self):
+        o = 'tests/temp_data/flat_output'
+        c = localcrawl.Crawler('tests/data/loop_sub/index.html', o,
+                               flat_output=True).crawl()
+        self.assertEqual(2, c)
