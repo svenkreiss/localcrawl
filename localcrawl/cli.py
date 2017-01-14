@@ -18,7 +18,7 @@ def main():
     parser.add_argument('--pdf', default=False, action='store_true',
                         help='also store a PDF version')
     parser.add_argument('--run', default=None, nargs=argparse.REMAINDER,
-                        help='run a process')
+                        help='run a background process')
     parser.add_argument('--run-delay', default=3.0, type=float,
                         help='wait after run process')
     parser.add_argument('--flat-output', default=False, action='store_true',
