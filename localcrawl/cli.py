@@ -23,7 +23,7 @@ def main():
                         help='wait after run process')
     parser.add_argument('--flat-output', default=False, action='store_true',
                         help='outputs are flat files (more robust)')
-    parser.add_argument('--output-encoding',  default=None,
+    parser.add_argument('--output-encoding', default=None,
                         help='output encoding')
     args = parser.parse_args()
 

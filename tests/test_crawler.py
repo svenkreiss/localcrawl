@@ -20,11 +20,13 @@ class CrawlerTest(unittest.TestCase):
     def test_ascii(self):
         o = 'tests/temp_data/simple_site'
         with self.assertRaises(UnicodeEncodeError):
-            c = localcrawl.Crawler('tests/data/simple_site/index.html', o, output_encoding='ascii').crawl()
+            localcrawl.Crawler('tests/data/simple_site/index.html', o,
+                               output_encoding='ascii').crawl()
 
     def test_utf8(self):
         o = 'tests/temp_data/simple_site'
-        c = localcrawl.Crawler('tests/data/simple_site/index.html', o, output_encoding='utf8').crawl()
+        c = localcrawl.Crawler('tests/data/simple_site/index.html', o,
+                               output_encoding='utf8').crawl()
         self.assertEqual(1, c)
         self.assertIn('<title>Simple Site</title>', self.all_contents(o))
 
