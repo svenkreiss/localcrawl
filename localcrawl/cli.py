@@ -29,6 +29,8 @@ def main():
                         help='output encoding')
     parser.add_argument('--chrome', default=False, action='store_true',
                         help='use Chrome')
+    parser.add_argument('--no-sandbox', default=False, action='store_true',
+                        help='pass --no-sandbox to chromedriver')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
@@ -37,6 +39,8 @@ def main():
     if args.chrome:
         chrome_options = selenium.webdriver.chrome.options.Options()
         chrome_options.add_argument('--headless')
+        if args.no_sandbox:
+            chrome_options.add_argument('--no-sandbox')
         scraper = Scraper(selenium.webdriver.Chrome(
             chrome_options=chrome_options))
 
