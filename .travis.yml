@@ -1,6 +1,9 @@
 language: python
 addons:
   chrome: stable
+  apt:
+    packages:
+      - chromium-chromedriver
 python:
  - "2.7"
  - "3.4"
