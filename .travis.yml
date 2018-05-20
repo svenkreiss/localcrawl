@@ -13,7 +13,7 @@ python:
 install:
  - pip install --upgrade pip
  - pip install .[tests]
- - ln -s /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+ - sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
 script:
  - flake8
  - nosetests -vv
