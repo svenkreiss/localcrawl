@@ -12,6 +12,9 @@ class Scraper(object):
         self.setup_pdf_export()
 
     def setup_pdf_export(self):
+        if not isinstance(self.driver, selenium.webdriver.PhantomJS):
+            return
+
         self.driver.command_executor._commands['executePhantomScript'] = \
             ('POST', '/session/$sessionId/phantom/execute')
         self.driver.execute(
