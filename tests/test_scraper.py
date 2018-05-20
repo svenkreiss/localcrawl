@@ -19,7 +19,11 @@ class ScraperTest(unittest.TestCase):
         self.assertIn('page2.html', urls[0])
 
     def test_index_chrome(self):
-        c = localcrawl.Scraper(selenium.webdriver.Chrome())
+        chrome_options = selenium.webdriver.chrome.options.Options()
+        chrome_options.add_argument('--headless')
+        driver = selenium.webdriver.Chrome(chrome_options=chrome_options)
+
+        c = localcrawl.Scraper(driver)
         url = 'file://' + os.getcwd() + '/tests/data/simple_site/index.html'
         html = c.html(url)
         self.assertIn('<title>Simple Site</title>', html)

@@ -35,7 +35,10 @@ def main():
 
     scraper = None
     if args.chrome:
-        scraper = Scraper(selenium.webdriver.Chrome())
+        chrome_options = selenium.webdriver.chrome.options.Options()
+        chrome_options.add_argument('--headless')
+        scraper = Scraper(selenium.webdriver.Chrome(
+            chrome_options=chrome_options))
 
     Crawler(args.start, args.out, max_depth=args.depth,
             run=args.run, run_delay=args.run_delay,
