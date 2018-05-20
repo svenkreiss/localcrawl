@@ -1,8 +1,10 @@
 """Crawl and render JavaScript templates."""
 
 from .crawler import Crawler
+from .scraper import Scraper
 import argparse
 import logging
+import selenium.webdriver
 
 
 def main():
@@ -25,10 +27,21 @@ def main():
                         help='outputs are flat files (more robust)')
     parser.add_argument('--output-encoding', default=None,
                         help='output encoding')
+    parser.add_argument('--chrome', default=False, action='store_true',
+                        help='use Chrome')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
+
+    scraper = None
+    if args.chrome:
+        chrome_options = selenium.webdriver.chrome.options.Options()
+        chrome_options.add_argument('--headless')
+        scraper = Scraper(selenium.webdriver.Chrome(
+            chrome_options=chrome_options))
+
     Crawler(args.start, args.out, max_depth=args.depth,
             run=args.run, run_delay=args.run_delay,
-            get_pdf=args.pdf, flat_output=args.flat_output,
+            get_pdf=args.pdf, scraper=scraper,
+            flat_output=args.flat_output,
             output_encoding=args.output_encoding).crawl()
