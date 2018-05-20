@@ -14,7 +14,8 @@ log = logging.getLogger(__name__)
 class Crawler(object):
     def __init__(self, start, out='_crawled/', max_depth=3,
                  force_url_prefix=None, run=None, run_delay=3.0,
-                 get_pdf=False, scraper=None, flat_output=False):
+                 get_pdf=False, scraper=None, flat_output=False,
+                 output_encoding=None):
         start = self.absolute_path(start)
         self.urls = [(start, 0)]
         self.out = out
@@ -25,6 +26,7 @@ class Crawler(object):
         self.get_pdf = get_pdf
         self.scraper = scraper or Scraper()
         self.flat_output = flat_output
+        self.output_encoding = output_encoding
 
         self.done = set()
 
@@ -107,7 +109,7 @@ class Crawler(object):
         dirname = os.path.dirname(path)
         if not os.path.isdir(dirname):
             os.makedirs(dirname)
-        with io.open(path, 'w') as f:
+        with io.open(path, 'w', encoding=self.output_encoding) as f:
             f.write(html)
         if self.get_pdf:
             self.scraper.pdf(url, path.replace('.html', '') + '.pdf')

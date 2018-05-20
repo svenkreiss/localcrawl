@@ -23,9 +23,12 @@ def main():
                         help='wait after run process')
     parser.add_argument('--flat-output', default=False, action='store_true',
                         help='outputs are flat files (more robust)')
+    parser.add_argument('--output-encoding',  default=None,
+                        help='output encoding')
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.WARNING)
     Crawler(args.start, args.out, max_depth=args.depth,
             run=args.run, run_delay=args.run_delay,
-            get_pdf=args.pdf, flat_output=args.flat_output).crawl()
+            get_pdf=args.pdf, flat_output=args.flat_output,
+            output_encoding=args.output_encoding).crawl()
